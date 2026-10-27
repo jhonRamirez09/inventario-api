@@ -6,7 +6,7 @@ def obtener_todos():
     conexion.close()
     return [dict(fila)for fila in filas ] #convierte cada fila en un diccionario, para que FastAPI la pueda devolver como JSON
 
-#funcion cumple solamente para buscar si el ID existe o no y que no este repetido 
+# Busca un producto por id; devuelve None si no existe 
 def obtener_por_id(id):
     conexion = obtener_conexion()
     fila = conexion.execute(" SELECT * FROM productos WHERE id = ?",(id,)).fetchone()  #fetchone() significa “dame una fila, o None si no hay
@@ -16,17 +16,7 @@ def obtener_por_id(id):
     else:
         return dict(fila)
     
-#funcion para insertar datos 
-def crear(nombre, sku, stock, precio):
-    conexion = obtener_conexion()
-    cursor = conexion.execute("INSERT INTO productos (nombre, sku, stock, precio) VALUES (?,?,?,?)",
-    (nombre,sku,stock,precio))
-    conexion.commit()
-    nuevo_id = cursor.lastrowid  #lastrowid es “¿qué id le tocó al que acabo de insertar?
-    conexion.close()
-    return obtener_por_id(nuevo_id)
-
-#funcion que sirve cuando haya un error con el sku repetido pueda seguir su funcion 
+# Inserta un producto; el finally cierra la conexion aunque falle
 def crear(nombre, sku, stock, precio):
     conexion = obtener_conexion()
     try:
@@ -48,9 +38,9 @@ def obtener_por_sku(sku):
     else:
         return dict(fila)
 
-def obtener_stock_bajo(stock):
+def obtener_stock_bajo(limite):
     conexion = obtener_conexion()
-    filas = conexion.execute("SELECT * FROM productos WHERE stock < ?",(stock,)).fetchall()
+    filas = conexion.execute("SELECT * FROM productos WHERE stock < ?",(limite,)).fetchall()
     conexion.close()
     return [dict(fila)for fila in filas ]
 
