@@ -44,7 +44,7 @@ def obtener_stock_bajo(limite):
     conexion.close()
     return [dict(fila)for fila in filas ]
 
-def actualizar(nombre, sku, stock, precio,id):
+def actualizar(id, nombre, sku, stock, precio):
     conexion = obtener_conexion()
     try:
         conexion.execute("UPDATE productos SET nombre = ?, sku = ?, stock = ?, precio = ? WHERE id = ?",

@@ -18,3 +18,11 @@ def crear(datos: ProductoEntrada):
 @router.post("/{id}/movimientos",status_code=200)
 def registrar_movimiento(id:int, datos: MovimientoEntrada):
     return servicio.registrar_movimiento(id, datos.tipo, datos.cantidad)
+
+@router.get("?/{stock}",status_code=409)
+def stock_inferior(stock:ProductoEntrada):
+    return servicio.crear_producto(stock)
+
+@router.get("")
+def listar(stockBajo: bool = False):
+    return servicio.listar_productos(stockBajo)

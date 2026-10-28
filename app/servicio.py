@@ -32,3 +32,22 @@ def registrar_movimiento(id,tipo,cantidad):
     if nuevo_stock < 0:
         raise StockInsuficiente(f"Stock insuficiente: disponible {producto['stock']}, solicitado {cantidad}")
     return repositorio.actualizar_stock(id,nuevo_stock)
+
+LIMITE_STOCK_BAJO = 10
+def listar_productos(stock_bajo):
+    if stock_bajo is True:
+        return repositorio.obtener_stock_bajo(LIMITE_STOCK_BAJO)
+    else:
+        return repositorio.obtener_todos()
+
+def eliminar_producto(id):
+    borradas = repositorio.eliminar(id)
+    if borradas == 0:
+       raise ProductoNoEncontrado(f"No existe el producto con id {id}")
+
+def actualizar_producto(id, nombre, sku, stock, precio):
+    obtener_producto(id)
+    encontrado = repositorio.obtener_por_sku(sku)
+    if encontrado is not None and encontrado["id"] != id:
+        raise SkuDuplicado(f"Sku ya existe, intenta con otro {sku}")
+    return repositorio.actualizar(id, nombre, sku, stock, precio)
