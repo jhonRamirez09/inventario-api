@@ -10,7 +10,6 @@ router = APIRouter(prefix="/productos", tags=["Productos"]) #todas las rutas de 
 def obtener(id: int):
     return servicio.obtener_producto(id)
 
-
 @router.post("", status_code=201)
 def crear(datos: ProductoEntrada):
     return servicio.crear_producto(datos.nombre, datos.sku, datos.stock, datos.precio)
@@ -19,10 +18,14 @@ def crear(datos: ProductoEntrada):
 def registrar_movimiento(id:int, datos: MovimientoEntrada):
     return servicio.registrar_movimiento(id, datos.tipo, datos.cantidad)
 
-@router.get("?/{stock}",status_code=409)
-def stock_inferior(stock:ProductoEntrada):
-    return servicio.crear_producto(stock)
-
 @router.get("")
 def listar(stockBajo: bool = False):
     return servicio.listar_productos(stockBajo)
+
+@router.put("/{id}", status_code=200)
+def actualizar_producto(id: int, datos:ProductoEntrada):
+    return servicio.actualizar_producto(id, datos.nombre, datos.sku, datos.stock, datos.precio)
+
+@router.delete("/{id}", status_code=204)
+def eliminar(id:int):
+    servicio.eliminar_producto(id)

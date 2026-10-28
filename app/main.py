@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 
 from app.database import crear_tablas
 from app.controlador import router
@@ -23,3 +24,10 @@ def manejar_sku_duplicado(request: Request, exc: SkuDuplicado):
 @app.exception_handler(StockInsuficiente)
 def manejar_stock_insuficiente(request:Request, exc:StockInsuficiente):
     return JSONResponse(status_code=409, content={"error": str(exc)})
+
+@app.exception_handler(RequestValidationError)
+def manejar_validacion(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=422,
+        content={"error": "Datos de entrada inválidos", "detalles": exc.errors()}
+    )
