@@ -54,6 +54,16 @@ def actualizar(nombre, sku, stock, precio,id):
         conexion.close()
     return obtener_por_id(id)
 
+def actualizar_stock(id,nuevo_stock):
+    conexion = obtener_conexion()
+    try:
+        conexion.execute("UPDATE productos SET stock = ? WHERE id = ?",
+        (nuevo_stock,id))
+        conexion.commit()
+    finally:
+        conexion.close()
+    return obtener_por_id(id)
+
 def eliminar(id):
     conexion = obtener_conexion()
     try:
