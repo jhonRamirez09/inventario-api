@@ -16,6 +16,7 @@ def obtener_producto(id):
     return producto
 
 def crear_producto(nombre,sku,stock,precio):
+    sku = sku.strip().upper()
     producto = repositorio.obtener_por_sku(sku)
     if producto is None:
         producto = repositorio.crear(nombre,sku,stock,precio)
@@ -46,6 +47,7 @@ def eliminar_producto(id):
        raise ProductoNoEncontrado(f"No existe el producto con id {id}")
 
 def actualizar_producto(id, nombre, sku, stock, precio):
+    sku = sku.strip().upper()
     obtener_producto(id)
     encontrado = repositorio.obtener_por_sku(sku)
     if encontrado is not None and encontrado["id"] != id:
